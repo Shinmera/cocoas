@@ -1,0 +1,32 @@
+# About Cocoas
+This is a small toolkit library to help deal with Apple's CoreFoundation, Cocoa, and Objective C interfaces.
+
+## How To
+The library exposes the additional cffi types ``nsstring``, ``cfstring``, ``cfnumber``, ``cfset``, ``cfarray``, and ``cfdictionary`` to allow convenient translation between the respective Lisp representation of these types and the ObjC/CoreFoundation representation. You can use them like you would any other CFFI type.
+
+You can also define convenient Lisp function wrappers for static methods and instance methods, using ``define-objcfun`` and ``define-objcmethod`` respectively, using similar syntax to ``cffi:defcfun``:
+
+:: common lisp
+(cocoas:define-objcfun "NSAlert" alloc :pointer)
+; [NSAlert alloc] => (nsalert-alloc)
+
+(cocoas:define-objcmethod init :pointer)
+; [obj init] => (init obj)
+
+(cocoas:define-objcmethod run-modal :uint)
+; [obj runModal] => (run-modal obj)
+
+(cocas:define-objcmethod ((setf informative-text) "setInformativeText:") NIL
+  (text cocoas:nsstring))
+; [obj setInformativeText: [NSString stringWithUTF8String: text]] => (setf (informative-text obj) text)
+::
+
+To handle object cleanup and initialisation, there's ``with-main-loop``, ``with-objects``, and ``with-foundation-objects``.
+
+:: common lisp
+(cocas:with-main-loop ()
+  (cocoas:with-objects ((window (init (nsalert-alloc))))
+    (setf (informative-text window) "Hello!")
+    (prog1 (run-modal window)
+      (loop while (cocoas:process-event)))))
+::

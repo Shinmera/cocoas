@@ -29,10 +29,12 @@
                          (write-char (char-downcase char) out))
                    (setf upcase NIL))))))))
 
-(defmacro define-objcfun (class name rettype &body args)
-  (destructuring-bind (name &optional method) (if (listp name) name (list name))
-    (unless method
-      (setf method (translate-method-name name)))
+(defmacro define-objcfun (class mname rettype &body args)
+  (destructuring-bind (name &optional (method (translate-method-name (if (listp mname) (first mname) mname)))) 
+      (if (listp mname) mname
+          (list (intern (format NIL "~a-~a"
+                                (string-upcase class)
+                                (symbol-name mname)))))
     (etypecase class
       (symbol (setf class (cffi:translate-camelcase-name class :upper-initial-p T)))
       (string))
@@ -41,7 +43,7 @@
                   ,@(loop for (name type) in args
                           collect type
                           collect name)
-                  ,rettype))))
+                  ,(or rettype 'objc:id)))))
 
 (defmacro define-objcmethod (name rettype &body args)
   (destructuring-bind (name &optional method) (if (listp name) name (list name))
@@ -53,7 +55,7 @@
                     ,@(loop for (name type) in args
                             collect type
                             collect name)
-                    ,rettype)))))
+                    ,(or rettype 'objc:id))))))
 
 (defmacro with-objects (bindings &body body)
   (if bindings
@@ -85,3 +87,8 @@
                           :bool T)))
     (unless (cffi:null-pointer-p event)
       (objc:call app "sendEvent:" :pointer event))))
+
+(defmacro with-main-loop (&body init)
+  `(trivial-main-thread:with-body-in-main-thread ()
+     (float-features:with-float-traps-masked T
+       ,@init)))

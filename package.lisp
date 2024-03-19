@@ -50,7 +50,8 @@
    #:define-objcmethod
    #:with-objects
    #:with-foundation-objects
-   #:process-event)
+   #:process-event
+   #:with-main-loop)
   (:export
    #:nsstring
    #:cfstring

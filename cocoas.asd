@@ -13,4 +13,5 @@
                (:file "types")
                (:file "wrapper")
                (:file "documentation"))
-  :depends-on (:float-features))
+  :depends-on (:float-features
+               :trivial-main-thread))

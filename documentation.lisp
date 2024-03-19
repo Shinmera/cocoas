@@ -92,7 +92,19 @@ is translated to
 
    fooBar:baz
 
-RETTYPE should be the return type of the function.
+If the NAME is not a list, the class is automatically prepended to the
+name of the resulting lisp function name, meaning
+
+   (define-objcfun \"foo\" bar ...)
+
+Results in the defined lisp function being named FOO-BAR, but
+
+   (define-objcfun \"foo\" (bar) ...)
+
+Results in the defined lisp function being named BAR.
+
+RETTYPE should be the return type of the function. It can also be NIL,
+in which case it is automatically replaced with OBJC:ID.
 
 ARGS should be a body of list specifying the function arguments, with
 the argument name first and the type second, same as CFFI:DEFCFUN.
@@ -115,7 +127,8 @@ is translated to
 
    fooBar:baz
 
-RETTYPE should be the return type of the function.
+RETTYPE should be the return type of the function. It can also be NIL,
+in which case it is automatically replaced with OBJC:ID.
 
 ARGS should be a body of list specifying the function arguments, with
 the argument name first and the type second, same as CFFI:DEFCFUN.
