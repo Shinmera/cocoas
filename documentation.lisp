@@ -76,13 +76,69 @@ See SHUTDOWN")
 See INIT")
   
   (function define-objcfun
-    "")
+    "Defines an ObjC static class method/function.
+
+CLASS should be the class name the method is defined on.
+
+NAME should be the name of the method. It can be a list of the
+lisp-side function name and the method name. If the method name is not
+explicitly given, it is translated from the lisp name. To specify
+colons in the name, you may use a slash instead. For instance, the
+lisp-name
+
+   foo-bar/baz
+
+is translated to
+
+   fooBar:baz
+
+RETTYPE should be the return type of the function.
+
+ARGS should be a body of list specifying the function arguments, with
+the argument name first and the type second, same as CFFI:DEFCFUN.
+
+See CFFI:DEFCFUN
+See DEFINE-OBJCMETHOD")
   
   (function define-objcmethod
-    "")
+    "Defines an ObjC instance method/function.
+
+NAME should be the name of the method. It can be a list of the
+lisp-side function name and the method name. If the method name is not
+explicitly given, it is translated from the lisp name. To specify
+colons in the name, you may use a slash instead. For instance, the
+lisp-name
+
+   foo-bar/baz
+
+is translated to
+
+   fooBar:baz
+
+RETTYPE should be the return type of the function.
+
+ARGS should be a body of list specifying the function arguments, with
+the argument name first and the type second, same as CFFI:DEFCFUN.
+
+See CFFI:DEFCFUN
+See DEFINE-OBJCFUN")
   
   (function with-objects
-    "")
+    "Bind a bunch of ObjC objects.
+
+Automatically calls OBJC:FREE to deallocate the objects on exit. If an
+object is bound to a null pointer, its failure form is returned.
+
+Each binding may be a list of the variable name, initialiser form, and
+an optional failure form. If the failure form is not specified, an
+ERROR form is generated for you.")
   
   (function with-foundation-objects
-    ""))
+    "Bind a bunch of CoreFramework objects.
+
+Automatically calls OBJC:RELEASE to deallocate the objects on exit. If an
+object is bound to a null pointer, its failure form is returned.
+
+Each binding may be a list of the variable name, initialiser form, and
+an optional failure form. If the failure form is not specified, an
+ERROR form is generated for you."))

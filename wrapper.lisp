@@ -18,7 +18,16 @@
     (string
      name)
     (symbol
-     (substitute #\: #\/ (cffi:translate-camelcase-name name)))))
+     (with-output-to-string (out)
+       (loop with upcase = NIL
+             for char across (string name)
+             do (case char
+                  (#\/ (write-char #\: out))
+                  (#\- (setf upcase T))
+                  (T (if upcase
+                         (write-char (char-upcase char) out)
+                         (write-char (char-downcase char) out))
+                   (setf upcase NIL))))))))
 
 (defmacro define-objcfun (class name rettype &body args)
   (destructuring-bind (name &optional method) (if (listp name) name (list name))
