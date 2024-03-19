@@ -141,4 +141,9 @@ object is bound to a null pointer, its failure form is returned.
 
 Each binding may be a list of the variable name, initialiser form, and
 an optional failure form. If the failure form is not specified, an
-ERROR form is generated for you."))
+ERROR form is generated for you.")
+
+  (function process-event
+    "Process an event from the apps' queue.
+
+Returns true if an event was processed and NIL otherwise."))

@@ -49,7 +49,8 @@
    #:define-objcfun
    #:define-objcmethod
    #:with-objects
-   #:with-foundation-objects)
+   #:with-foundation-objects
+   #:process-event)
   (:export
    #:nsstring
    #:cfstring

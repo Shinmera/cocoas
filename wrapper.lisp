@@ -76,3 +76,12 @@
                     (progn ,@body)
                  (objc:release ,var)))))
       `(progn ,@body)))
+
+(defun process-event (&optional (app objc:app))
+  (let ((event (objc:call app "nextEventMatchingMask:untilDate:inMode:dequeue:"
+                          objc:event-mask :any
+                          :pointer (objc:call "NSDate" "distantPast")
+                          :pointer objc:default-run-loop-mode
+                          :bool T)))
+    (unless (cffi:null-pointer-p event)
+      (objc:call app "sendEvent:" :pointer event))))
