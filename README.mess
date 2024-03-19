@@ -30,3 +30,5 @@ To handle object cleanup and initialisation, there's ``with-main-loop``, ``with-
     (prog1 (run-modal window)
       (loop while (cocoas:process-event)))))
 ::
+
+The library also installs a standard uncaught exception handler that translates and re-signals any ``NSException`` as a ``foundation-error`` so the errors can be dealt with Lisp-side.

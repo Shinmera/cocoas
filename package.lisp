@@ -44,6 +44,9 @@
   (:local-nicknames
    (#:objc #:org.shirakumo.cocoas.cffi))
   (:export
+   #:foundation-error
+   #:name
+   #:reason
    #:init
    #:shutdown
    #:define-objcfun

@@ -16,8 +16,9 @@
       (error "~a is neither a string nor pointer." obj)))
 
 (defmethod cffi:translate-from-foreign (ptr (type nsstring))
-  (unwind-protect (objc:call "NSString" "UTF8String" :string)
-    (objc:free ptr)))
+  (unless (cffi:null-pointer-p ptr)
+    (unwind-protect (objc:call "NSString" "UTF8String" :string)
+      (objc:free ptr))))
 
 (defmethod cffi:free-translated-object (ptr (type nsstring) free-p)
   (when free-p

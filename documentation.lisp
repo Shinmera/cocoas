@@ -59,6 +59,24 @@ Will translate to a hash-table with an EQUAL test, and from a
 hash-table or alist."))
 
 (docs:define-docs
+  (type foundation-error
+    "Representation of an NSException error.
+
+Signalled for uncaught NSExceptions.
+
+See NAME
+See REASON")
+
+  (function name
+    "Returns the name for the foundation-error.
+
+See FOUNDATION-ERROR (type)")
+
+  (function reason
+    "Returns the reason for the foundation-error, if any.
+
+See FOUNDATION-ERROR (type)")
+  
   (function init
     "Initialises the libraries.
 

@@ -126,9 +126,6 @@
 (cffi:defcfun (set-uncaught-exception-handler "NSSetUncaughtExceptionHandler") :void
   (handler :pointer))
 
-(cffi:defcallback exception-handler :void ((object id) (pointer :pointer))
-  (error "Fuck!"))
-
 (cffi:defcvar (app "NSApp") :pointer)
 
 (cffi:defcenum (event-mask :uint64)

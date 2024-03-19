@@ -1,9 +1,28 @@
 (in-package #:org.shirakumo.cocoas)
 
+(define-condition foundation-error (error)
+  ((name :initarg :name :initform NIL :reader name)
+   (reason :initarg :reason :initform NIL :reader reason))
+  (:report (lambda (c s) (format s "Foundation error ~s~@[~%  ~a~]"
+                                 (name c) (reason c)))))
+
+(defun foundation-error (exception)
+  (etypecase exception
+    (cffi:foreign-pointer
+     (error 'foundation-error
+            :name (objc:call exception "name" nsstring)
+            :reason (objc:call exception "reason" nsstring)))
+    (string
+     (error 'foundation-error :name exception))))
+
+(cffi:defcallback %foundation-error :void ((exception :pointer))
+  (foundation-error exception))
+
 (defun init (&rest libs)
   (let ((libs (or libs '(:foundation :cocoa :appkit))))
     (unless (cffi:foreign-library-loaded-p 'objc:foundation)
-      (cffi:load-foreign-library 'objc:foundation))
+      (cffi:load-foreign-library 'objc:foundation)
+      (objc:set-uncaught-exception-handler (cffi:callback %foundation-error)))
     (when (member :cocoa libs)
       (unless (cffi:foreign-library-loaded-p 'objc:cocoa)
         (cffi:load-foreign-library 'objc:cocoa)))
