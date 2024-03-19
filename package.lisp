@@ -43,6 +43,10 @@
   (:use #:cl)
   (:local-nicknames
    (#:objc #:org.shirakumo.cocoas.cffi))
+  (:import-from
+   #:org.shirakumo.cocoas.cffi
+   #:release
+   #:free)
   (:export
    #:foundation-error
    #:name
@@ -54,7 +58,9 @@
    #:with-objects
    #:with-foundation-objects
    #:process-event
-   #:with-main-loop)
+   #:with-main-loop
+   #:release
+   #:free)
   (:export
    #:nsstring
    #:cfstring

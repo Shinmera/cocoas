@@ -98,14 +98,19 @@
                  (objc:release ,var)))))
       `(progn ,@body)))
 
-(defun process-event (&optional (app objc:app))
-  (let ((event (objc:call app "nextEventMatchingMask:untilDate:inMode:dequeue:"
-                          objc:event-mask :any
-                          :pointer (objc:call "NSDate" "distantPast")
-                          :pointer objc:default-run-loop-mode
-                          :bool T)))
-    (unless (cffi:null-pointer-p event)
-      (objc:call app "sendEvent:" :pointer event))))
+(defun process-event (&key (app objc:app) timeout)
+  (with-objects ((date (etypecase timeout
+                         (null (objc:call "NSDate" "distantPast"))
+                         ((eql T) (objc:call "NSDate" "distantFuture"))
+                         (real (objc:call "NSDate" "dateWithTimeIntervalSinceNow:"
+                                          :double (double timeout 0d0))))))
+    (let ((event (objc:call app "nextEventMatchingMask:untilDate:inMode:dequeue:"
+                            objc:event-mask :any
+                            :pointer date
+                            :pointer objc:default-run-loop-mode
+                            :bool T)))
+      (unless (cffi:null-pointer-p event)
+        (objc:call app "sendEvent:" :pointer event)))))
 
 (defmacro with-main-loop (&body init)
   `(trivial-main-thread:with-body-in-main-thread ()
