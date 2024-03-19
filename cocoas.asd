@@ -13,5 +13,6 @@
                (:file "types")
                (:file "wrapper")
                (:file "documentation"))
-  :depends-on (:float-features
+  :depends-on (:cffi
+               :float-features
                :trivial-main-thread))

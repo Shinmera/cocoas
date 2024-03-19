@@ -159,4 +159,15 @@ ERROR form is generated for you.")
   (function process-event
     "Process an event from the apps' queue.
 
-Returns true if an event was processed and NIL otherwise."))
+Returns true if an event was processed and NIL otherwise.")
+
+  (function with-main-loop
+    "Runs BODY in the main thread.
+
+MacOS requires GUI things to run on the main thread. Additionally,
+system API calls frequently generate floating point traps which your
+Lisp implementation will likely intercept. This also disables those to
+ensure your application can run properly.
+
+See FLOAT-FEATURES:WITH-FLOAT-TRAPS-MASKED
+See TRIVIAL-MAIN-THREAD:WITH-BODY-IN-MAIN-THREAD"))
