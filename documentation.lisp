@@ -10,8 +10,8 @@
   (type cfnumber
     "CFFI type for CFNumber translation.
 
-Requires an argument that specifies the base number type to translate
-between:
+An optional argument may specify the raw number type to use, which may
+be one of the following:
 
   :int8
   :int16
@@ -29,7 +29,8 @@ between:
   org.shirakumo.cocoas.cffi:cgfloat
 
 The actual lisp value will be coerced (as possible) to conform to the
-number type.")
+number type. If not specified, the default is
+org.shirakumo.cocoas.cffi:cgfloat")
 
   (type cfset
     "CFFI type for CFSet translation.

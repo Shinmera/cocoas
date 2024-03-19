@@ -74,7 +74,7 @@
   ((number-type :initarg :number-type :reader number-type))
   (:actual-type :pointer))
 
-(cffi:define-parse-method cfnumber (number-type)
+(cffi:define-parse-method cfnumber (&optional (number-type 'objc:cgfloat))
   (unless (member number-type (cffi:foreign-enum-keyword-list 'objc:number-type))
     (error "~s is not a valid number type." number-type))
   (make-instance 'cfnumber :number-type number-type))
