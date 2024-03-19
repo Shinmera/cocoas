@@ -10,6 +10,7 @@
   :serial T
   :components ((:file "package")
                (:file "low-level")
+               (:file "types")
                (:file "wrapper")
                (:file "documentation"))
   :depends-on (:float-features))

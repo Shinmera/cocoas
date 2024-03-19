@@ -12,14 +12,28 @@
 (cffi:defctype id :pointer)
 (cffi:defctype oclass :pointer)
 (cffi:defctype sel :pointer)
+(cffi:defctype cgfloat :double)
+(cffi:defctype cfindex :long)
+(cffi:defctype nsinteger :long)
 
 (cffi:defcenum (string-encoding :uint32)
   (:utf-8 #x08000100))
 
 (cffi:defcenum (number-type cfindex)
+  (:int8 1)
+  (:int16 2)
   (:int32 3)
+  (:int64 4)
+  (:char 7)
+  (:short 8)
+  (:int 9)
+  (:long 10)
+  (:longlong 11)
   (:float 12)
-  (:double 13))
+  (:double 13)
+  (cfindex 14)
+  (nsinteger 15)
+  (cgfloat 16))
 
 (cffi:defcfun (release "CFRelease") :void
   (object :pointer))
@@ -50,7 +64,28 @@
   (dictionary :pointer)
   (key :pointer))
 
+(cffi:defcfun (dictionary-get-count "CFDictionaryGetCount") cfindex
+  (dictionary :pointer))
+
+(cffi:defcfun (dictionary-get-keys-and-values "CFDictionaryGetKeysAndValues") :void
+  (dictionary :pointer)
+  (keys :pointer)
+  (values :pointer))
+
 (cffi:defcfun (create-set "CFSetCreate") :pointer
+  (allocator :pointer)
+  (values :pointer)
+  (num-values cfindex)
+  (callbacks :pointer))
+
+(cffi:defcfun (set-get-count "CFSetGetCount") cfindex
+  (set :pointer))
+
+(cffi:defcfun (set-get-values "CFSetGetValues") :void
+  (set :pointer)
+  (values :pointer))
+
+(cffi:defcfun (create-array "CFArrayCreate") :pointer
   (allocator :pointer)
   (values :pointer)
   (num-values cfindex)
@@ -94,12 +129,12 @@
 (cffi:defcallback exception-handler :void ((object id) (pointer :pointer))
   (error "Fuck!"))
 
-(cffi:defcvar (nsapp "NSApp") :pointer)
+(cffi:defcvar (app "NSApp") :pointer)
 
-(cffi:defcenum (NSEventMask :uint64)
+(cffi:defcenum (event-mask :uint64)
   (:any #.(1- (ash 1 64))))
 
-(cffi:defcvar (nsdefaultrunloopmode "NSDefaultRunLoopMode") :pointer)
+(cffi:defcvar (default-run-loop-mode "NSDefaultRunLoopMode") :pointer)
 
 (defmacro %cache (value)
   (let ((cache (gensym "CACHE")))
