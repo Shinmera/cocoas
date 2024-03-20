@@ -1,6 +1,49 @@
 (in-package #:org.shirakumo.cocoas)
 
 (docs:define-docs
+  (type id
+    "CFFI type for Objective C IDs.")
+
+  (type oclass
+    "CFFI type for Objective C Classes.")
+
+  (type sel
+    "CFFI type for Objective C method names/SELs.")
+
+  (type cgfloat
+    "CFFI type for CGFloat.")
+
+  (type cfindex
+    "CFFI type for CFIndex.")
+
+  (type nsinteger
+    "CFFI type for NSInteger.")
+
+  (function release
+    "Function to call Objective C's release on an object.")
+  
+  (function free
+    "Function to call CoreFoundation's dealloc on an object.")
+  
+  (variable app
+    "Accesses the NSApp instance.")
+  
+  (function call
+    "Macro to perform an Objective C call.
+
+SELF must either be a string denoting a class name or a pointer to an
+Objective C instance. METHOD must be a string naming the method to
+call.
+
+ARGS should be a list of alternating argument types and argument
+values, and optionally the final return type, same as
+CFFI:FOREIGN-FUNCALL. If the return type is not specified, it is
+defaulted to ID.
+
+The class and method name resolution happen once on first execute and
+are then cached at the call-site."))
+
+(docs:define-docs
   (type nsstring
     "CFFI type for NSString translation.")
 

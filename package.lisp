@@ -54,8 +54,27 @@
    (#:objc #:org.shirakumo.cocoas.cffi))
   (:import-from
    #:org.shirakumo.cocoas.cffi
+   #:id
+   #:oclass
+   #:sel
+   #:cgfloat
+   #:cfindex
+   #:nsinteger
    #:release
-   #:free)
+   #:free
+   #:app
+   #:call)
+  (:export
+   #:id
+   #:oclass
+   #:sel
+   #:cgfloat
+   #:cfindex
+   #:nsinteger
+   #:release
+   #:free
+   #:app
+   #:call)
   (:export
    #:foundation-error
    #:name
@@ -67,9 +86,7 @@
    #:with-objects
    #:with-foundation-objects
    #:process-event
-   #:with-main-loop
-   #:release
-   #:free)
+   #:with-main-loop)
   (:export
    #:nsstring
    #:cfstring
