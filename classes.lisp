@@ -16,9 +16,9 @@
   (with-output-to-string (out)
     (dolist (type types)
       (ecase type
-        (objc:id (write-char #\@ out))
-        (objc:sel (write-char #\: out))
-        (objc:oclass (write-char #\# out))
+        ((:id objc:id) (write-char #\@ out))
+        ((:sel objc:sel) (write-char #\: out))
+        ((:class objc:oclass) (write-char #\# out))
         (:string (write-char #\* out))
         (:void (write-char #\v out))
         ((:bool :boolean) (write-char #\B out))
@@ -36,15 +36,25 @@
         ((:char :char) (write-char #\c out))
         (:pointer (write-char #\? out))))))
 
+(defun normalize-type (type)
+  (case type 
+    (:id 'objc:id)
+    (:sel 'objc:sel)
+    (:class 'objc:oclass)
+    (T type)))
+
 (defmacro define-objc-method ((class method) rettype args &body body)
   (let ((cbname (intern (format NIL "%~a-~a" (string-upcase class) method)))
-        (types (encode-types (list* rettype 'objc:id 'objc:sel (mapcar #'second args)))))
+        (types (encode-types (list* rettype 'objc:id 'objc:sel (mapcar #'second args))))
+        (args (loop for (var type) in args
+                    collect (list var (normalize-type type)))))
     `(progn 
        (let ((def (or (gethash ,class *classdefs*)
-                      (error "No such class ~s" class))))
-         (setf (gethash ,method (second def)) (list ',cbname ,types)))
+                      (error "No such class ~s" ,class))))
+         (setf (gethash ,(to-method-name method) (second def)) (list ',cbname ,types)))
        
-       (cffi:defcallback ,cbname ,rettype ((self :pointer) (command self) ,@args)
+       (cffi:defcallback ,cbname ,(normalize-type rettype) ((self :pointer) (command objc:sel) ,@args)
+         (declare (ignorable self command))
          ,@body))))
 
 (defun register-class (name superclass methods)
