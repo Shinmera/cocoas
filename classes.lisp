@@ -47,14 +47,15 @@
   (let ((cbname (intern (format NIL "%~a-~a" (string-upcase class) method)))
         (types (encode-types (list* rettype 'objc:id 'objc:sel (mapcar #'second args))))
         (args (loop for (var type) in args
-                    collect (list var (normalize-type type)))))
+                    collect (list var (normalize-type type))))
+        (self (intern (string :self))))
     `(progn 
        (let ((def (or (gethash ,class *classdefs*)
                       (error "No such class ~s" ,class))))
          (setf (gethash ,(to-method-name method) (second def)) (list ',cbname ,types)))
        
-       (cffi:defcallback ,cbname ,(normalize-type rettype) ((self :pointer) (command objc:sel) ,@args)
-         (declare (ignorable self command))
+       (cffi:defcallback ,cbname ,(normalize-type rettype) ((,self :pointer) (command objc:sel) ,@args)
+         (declare (ignorable ,self command))
          ,@body))))
 
 (defun register-class (name superclass methods)

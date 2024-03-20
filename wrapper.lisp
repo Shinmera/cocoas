@@ -90,7 +90,7 @@
            (if (cffi:null-pointer-p ,var)
                ,(or fail `(error "The ObjC call to ~a failed." ',(car init)))
                (unwind-protect
-                    (progn ,@body)
+                    (with-objects ,bindings ,@body)
                  (objc:free ,var)))))
       `(progn ,@body)))
 
@@ -101,7 +101,7 @@
            (if (cffi:null-pointer-p ,var)
                ,(or fail `(error "The OS call to ~a failed." ',(car init)))
                (unwind-protect
-                    (progn ,@body)
+                    (with-foundation-objects ,bindings ,@body)
                  (objc:release ,var)))))
       `(progn ,@body)))
 
