@@ -11,6 +11,7 @@
   :components ((:file "package")
                (:file "low-level")
                (:file "types")
+               (:file "classes")
                (:file "wrapper")
                (:file "documentation"))
   :depends-on (:cffi

@@ -1,5 +1,7 @@
 (in-package #:org.shirakumo.cocoas)
 
+(defvar *init* NIL)
+
 (define-condition foundation-error (error)
   ((name :initarg :name :initform NIL :reader name)
    (reason :initarg :reason :initform NIL :reader reason))
@@ -19,20 +21,25 @@
   (foundation-error exception))
 
 (defun init (&rest libs)
-  (let ((libs (or libs '(:foundation :cocoa :appkit))))
-    (unless (cffi:foreign-library-loaded-p 'objc:foundation)
-      (cffi:load-foreign-library 'objc:foundation)
-      (objc:set-uncaught-exception-handler (cffi:callback %foundation-error)))
-    (when (member :cocoa libs)
-      (unless (cffi:foreign-library-loaded-p 'objc:cocoa)
-        (cffi:load-foreign-library 'objc:cocoa)))
-    (when (member :appkit libs)
-      (unless (cffi:foreign-library-loaded-p 'objc:appkit)
-        (cffi:load-foreign-library 'objc:appkit)))))
+  (unless *init*
+    (let ((libs (or libs '(:foundation :cocoa :appkit))))
+      (unless (cffi:foreign-library-loaded-p 'objc:foundation)
+        (cffi:load-foreign-library 'objc:foundation)
+        (objc:set-uncaught-exception-handler (cffi:callback %foundation-error)))
+      (when (member :cocoa libs)
+        (unless (cffi:foreign-library-loaded-p 'objc:cocoa)
+          (cffi:load-foreign-library 'objc:cocoa)))
+      (when (member :appkit libs)
+        (unless (cffi:foreign-library-loaded-p 'objc:appkit)
+          (cffi:load-foreign-library 'objc:appkit)))
+      (setf *init* T)
+      (register-classes))))
 
-(defun shutdown ())
+(defun shutdown ()
+  (when *init*
+    (setf *init* NIL)))
 
-(defun translate-method-name (name)
+(defun to-method-name (name)
   (etypecase name
     (string
      name)
@@ -49,7 +56,7 @@
                    (setf upcase NIL))))))))
 
 (defmacro define-objcfun (class mname rettype &body args)
-  (destructuring-bind (name &optional (method (translate-method-name (if (listp mname) (first mname) mname)))) 
+  (destructuring-bind (name &optional (method (to-method-name (if (listp mname) (first mname) mname)))) 
       (if (listp mname) mname
           (list (intern (format NIL "~a-~a"
                                 (string-upcase class)
@@ -67,7 +74,7 @@
 (defmacro define-objcmethod (name rettype &body args)
   (destructuring-bind (name &optional method) (if (listp name) name (list name))
     (unless method
-      (setf method (translate-method-name name)))
+      (setf method (to-method-name name)))
     (let ((self (gensym "SELF")))
       `(defun ,name (,self ,@(loop for (name) in args collect name))
          (objc:call ,self ,method
