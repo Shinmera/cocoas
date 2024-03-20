@@ -31,6 +31,15 @@
    #:string-get-cstring
    #:string-get-cstring-ptr
    #:get-class
+   #:class-allocate-class
+   #:class-register-class
+   #:class-get-name
+   #:class-get-superclass
+   #:class-add-method
+   #:class-get-method-implementation
+   #:class-replace-method
+   #:object-get-class
+   #:object-set-class
    #:register-name
    #:set-uncaught-exception-handler
    #:app

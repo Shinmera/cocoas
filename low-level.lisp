@@ -120,6 +120,43 @@
 (cffi:defcfun (get-class "objc_getClass") oclass
   (name :string))
 
+(cffi:defcfun (class-allocate-class "class_allocateClassPair") oclass
+  (superclass oclass)
+  (name :string)
+  (extra-bytes :size))
+
+(cffi:defcfun (class-register-class "class_registerClassPair") :void
+  (class oclass))
+
+(cffi:defcfun (class-get-name "class_getName") :string
+  (class oclass))
+
+(cffi:defcfun (class-get-superclass "objc_getSuperclass") oclass
+  (class oclass))
+
+(cffi:defcfun (class-add-method "class_addMethod") :bool
+  (class oclass)
+  (name sel)
+  (implementation :pointer)
+  (types :string))
+
+(cffi:defcfun (class-get-method-implementation "class_getMethodImplementation") :pointer
+  (class oclass)
+  (name sel))
+
+(cffi:defcfun (class-replace-method "class_replaceMethod") :pointer
+  (class oclass)
+  (name sel)
+  (implementation :pointer)
+  (types :string))
+
+(cffi:defcfun (object-get-class "object_getClass") oclass
+  (object id))
+
+(cffi:defcfun (object-set-class "object_setClass") oclass
+  (object id)
+  (class oclass))
+
 (cffi:defcfun (register-name "sel_registerName") sel
   (name :string))
 
