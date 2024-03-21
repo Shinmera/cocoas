@@ -15,7 +15,7 @@
 (defun encode-types (types)
   (with-output-to-string (out)
     (dolist (type types)
-      (ecase type
+      (case type
         ((:id objc:id) (write-char #\@ out))
         ((:sel objc:sel) (write-char #\: out))
         ((:class objc:oclass) (write-char #\# out))
@@ -34,7 +34,18 @@
         ((:short :short) (write-char #\s out))
         ((:int :int) (write-char #\i out))
         ((:char :char) (write-char #\c out))
-        (:pointer (write-char #\? out))))))
+        (:pointer (write-char #\? out))
+        (T (etypecase type
+             (cons (destructuring-bind (kind inner) type
+                     (ecase kind
+                       (:struct
+                        (format out "[~a=~a]"
+                                (cffi:translate-camelcase-name inner)
+                                (encode-types (loop for name in (cffi:foreign-slot-names type)
+                                                    collect (cffi:foreign-slot-type type name)))))
+                       (:pointer
+                        (format out "^~a" (encode-types (list inner)))))))
+             (symbol type)))))))
 
 (defun normalize-type (type)
   (case type 
