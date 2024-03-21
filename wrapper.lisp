@@ -8,14 +8,14 @@
   (:report (lambda (c s) (format s "Foundation error ~s~@[~%  ~a~]"
                                  (name c) (reason c)))))
 
-(defun foundation-error (exception)
+(defun foundation-error (exception &optional (type 'foundation-error))
   (etypecase exception
     (cffi:foreign-pointer
-     (error 'foundation-error
+     (error type
             :name (objc:call exception "name" nsstring)
             :reason (objc:call exception "reason" nsstring)))
     (string
-     (error 'foundation-error :name exception))))
+     (error type :name exception))))
 
 (cffi:defcallback %foundation-error :void ((exception :pointer))
   (foundation-error exception))
