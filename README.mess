@@ -16,7 +16,7 @@ You can also define convenient Lisp function wrappers for static methods and ins
 (cocoas:define-objcmethod run-modal :uint)
 ; [obj runModal] => (run-modal obj)
 
-(cocas:define-objcmethod ((setf informative-text) "setInformativeText:") NIL
+(cocoas:define-objcmethod ((setf informative-text) "setInformativeText:") NIL
   (text cocoas:nsstring))
 ; [obj setInformativeText: [NSString stringWithUTF8String: text]] => (setf (informative-text obj) text)
 ::
@@ -24,7 +24,7 @@ You can also define convenient Lisp function wrappers for static methods and ins
 To handle object cleanup and initialisation, there's ``with-main-loop``, ``with-objects``, and ``with-foundation-objects``.
 
 :: common lisp
-(cocas:with-main-loop ()
+(cocoas:with-main-loop ()
   (cocoas:with-objects ((window (init (nsalert-alloc))))
     (setf (informative-text window) "Hello!")
     (prog1 (run-modal window)
