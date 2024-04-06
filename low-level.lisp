@@ -172,7 +172,7 @@
 
 (defmacro %cache (value)
   (let ((cache (gensym "CACHE")))
-    `(let ((,cache (cons NIL NIL)))
+    `(let ((,cache (load-time-value (cons NIL NIL))))
        (or (car ,cache) (setf (car ,cache) ,value)))))
 
 (defmacro call (self method &rest args)
