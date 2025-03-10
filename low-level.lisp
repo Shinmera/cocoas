@@ -9,6 +9,11 @@
 (cffi:define-foreign-library foundation
   (T (:framework "Foundation")))
 
+(set 'cl-user::*foreign-system-libraries*
+     (union (when (boundp 'cl-user::*foreign-system-libraries*)
+              (symbol-value 'cl-user::*foreign-system-libraries*))
+            '(cocoa appkit foundation)))
+
 (cffi:defctype id :pointer)
 (cffi:defctype oclass :pointer)
 (cffi:defctype sel :pointer)
