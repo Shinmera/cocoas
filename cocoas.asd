@@ -4,9 +4,9 @@
   :author "Yukari Hafner <shinmera@tymoon.eu>"
   :maintainer "Yukari Hafner <shinmera@tymoon.eu>"
   :description "A toolkit library to help deal with CoreFoundation, Cocoa, and objc"
-  :homepage "https://shinmera.github.io/cocoas/"
-  :bug-tracker "https://github.com/shinmera/cocoas/issues"
-  :source-control (:git "https://github.com/shinmera/cocoas.git")
+  :homepage "https://shinmera.com/docs/cocoas/"
+  :bug-tracker "https://shinmera.com/project/cocoas/issues"
+  :source-control (:git "https://shinmera.com/project/cocoas.git")
   :serial T
   :components ((:file "package")
                (:file "low-level")
